@@ -1,2 +1,6 @@
-route: 'estoque/movestoque/'
-call: 'ListarMovimentos'
+routes:
+- ["geral/produtos/", "ListarProdutos"]
+- ["produtos/op/", "ListarOrdemProducao"]
+- ["estoque/movestoque/", "ListarMovimentos"]
+- ["produtos/nfconsultar/", "ListarNF"]
+- ["produtos/pedido/", "ListarPedidos"]  

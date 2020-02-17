@@ -1,74 +1,70 @@
 import requests
 import json
 import yaml
-# import sys
 from time import sleep
 
 url = 'https://app.omie.com.br/api/v1/'
 
+# Lendo arquivos de configuração
 with open('./keys.yaml') as file:
     keys = yaml.load(file, Loader=yaml.FullLoader)
 
 with open('./routes.yaml') as file:
     routes = yaml.load(file, Loader=yaml.FullLoader)
 
+# Atribuindo chaves da api para variaveis
 app_key = keys['app_key']
 app_secret = keys['app_secret']
 
+for route, call in routes['routes']:
 
-# api = 'estoque/movestoque/'
-# call = 'ListarMovimentos'
+    # Nome para salvar arquivos com os dados coletados
+    filename = '{}.json'.format(call)
 
-api = routes['route']
-call = routes['call']
+    # Parâmetros padrão para requisição
+    params = {
+        "call": "{}".format(call),
+        "app_key": "{}".format(app_key),
+        "app_secret": "{}".format(app_secret),
+        "param": [
+            {
+                "pagina": 0,
+                "registros_por_pagina": 100,
+                "apenas_importado_api": "N"
+            }
+        ]
+    }
 
-filename = '{}.json'.format(call)
+    data = []
+    page = 1
 
-params = {
-    "call": "{}".format(call),
-    "app_key": "{}".format(app_key),
-    "app_secret": "{}".format(app_secret),
-    "param": [
-        {
-            "pagina": 0,
-            "registros_por_pagina": 100,
-            "apenas_importado_api": "N"
-        }
-    ]
-}
+    # Busca dados de todas as páginas
+    while True:
 
-data = []
-page = 1
+        params['page'] = page
 
-# Busca dados de todas as páginas
-while True:
+        # Formata o url para pegar dados da página atual
+        url_api = '{}{}?JSON={}'.format(
+            url,
+            route,
+            str(params).replace('\'', "\"")
+        )
 
-    params['page'] = page
+        # Fazendo a request pra página
+        response = requests.get(url_api)
 
-    # Formata o url para pegar dados da página atual
-    url_api = '{}{}?JSON={}'.format(
-        url,
-        api,
-        str(params).replace('\'', "\"")
-    )
+        # Testa se deu tudo certo
+        if response.status_code == 200:
+            content = response.json()
 
-    # Fazendo a request pra página
-    response = requests.get(url_api)
+            data += list(content)
+            page += 1
 
-    # Testa se deu tudo certo
-    if response.status_code == 200:
-        print('ok')
-        content = response.json()
+            sleep(3)
+        else:
+            print('Found {} pages from {} route!!'.format(page, call))
+            break
 
-        data += list(content)
-        page += 1
-
-        sleep(3)
-    else:
-        print('ERROR {}'.format(response.status_code))
-        print('Found {} pages!!'.format(page))
-        break
-
-# Salva o resultado em um arquivo json
-with open(filename, 'w') as json_file:
-    json.dump(data, json_file)
+    # Salva o resultado em um arquivo json
+    with open(filename, 'w') as json_file:
+        json.dump(data, json_file)
