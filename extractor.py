@@ -55,12 +55,12 @@ for app_key, app_secret in keys['keys']:
             # Fazendo a request pra página
             response = requests.get(url_api)
 
-            # Testa se deu tudo certo
             if response.status_code == 200:
-                content = response.json()
-
+                content = response.json()[list(response.json().keys())[-1]]
                 data += list(content)
                 page += 1
+
+                break
 
                 sleep(3)
             else:
