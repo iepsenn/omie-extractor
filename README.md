@@ -1,7 +1,7 @@
 # omie-extractor
 Extrator de dados para o ERP [Omie](https://www.omie.com.br/).
 
-## Prerequisites
+## Pré-requisitos
 O único prerequisito pode ser instalado com o seguinte comando:
 ```
 pip install PyYAML
@@ -16,5 +16,5 @@ pip install PyYAML
 ## Execução
 Basta mudar os parâmetros nos arquivos de configuração e rodar o script `extractor.py`
 
-## License
+## Licença
 This project is licensed under the Apache License - see the [LICENSE.md](LICENSE.md) file for details
