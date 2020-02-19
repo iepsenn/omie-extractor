@@ -63,8 +63,6 @@ for app_key, app_secret in keys['keys']:
                 data += list(content)
                 page += 1
 
-                break
-
                 sleep(3)
             else:
                 print('Found {} pages from {} route!!'.format(page, call))
