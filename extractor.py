@@ -2,6 +2,9 @@ import requests
 import json
 import yaml
 from time import sleep
+import time
+
+start_time = time.time()
 
 url = 'https://app.omie.com.br/api/v1/'
 
@@ -70,3 +73,7 @@ for app_key, app_secret in keys['keys']:
         # Salva o resultado em um arquivo json
         with open(filename, 'w') as json_file:
             json.dump(data, json_file)
+
+print('--- {} minutes ---'.format(
+    round((time.time() - start_time) / 60, 2))
+)
